@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog"
 
 interface ThumbnailProps {
   url: string | null | undefined,
@@ -19,6 +19,7 @@ export const Thumbnail = ({url}: ThumbnailProps) => {
         </div>
       </DialogTrigger>
       <DialogContent className="flex items-center max-w-[550px] border-none bg-transparent p-0 shadow-none">
+        <DialogTitle />
         <img
             src={url}
             alt="Message img"
