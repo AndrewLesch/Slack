@@ -49,7 +49,7 @@ export const MessageList = (
 ) => {
   const [editingId, setEditingId] = useState<Id<"messages"> | null>(null)
   const workspaceId = useWorkspaceId()
-  const {data: currentMebmer} = useCurrentMember({workspaceId})
+  const {data: currentMember} = useCurrentMember({workspaceId})
 
   const groupedMessages = data?.reduce(
     (groups, message) => {
@@ -93,7 +93,7 @@ export const MessageList = (
                 memberId={message.memberId}
                 authorImage={message.user.image}
                 authorName={message.user.name}
-                isAuthor={message.memberId === currentMebmer?._id}
+                isAuthor={message.memberId === currentMember?._id}
                 reactions={message.reactions}
                 body={message.body}
                 image={message.image}

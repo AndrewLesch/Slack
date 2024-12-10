@@ -36,7 +36,7 @@ const WorkSpaceIdLayout = ({children} : WorkSpaceIdLayoutProps) => {
               <ResizableHandle withHandle />
               <ResizablePanel minSize={20} defaultSize={29}>
                 {parentMessageId ? (
-                    <div>
+                    <div className="h-full">
                       <Thread 
                         messageId={parentMessageId as Id<"messages">}
                         onClose={onClose}
