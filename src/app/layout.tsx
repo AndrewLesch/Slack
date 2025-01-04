@@ -9,6 +9,7 @@ import { Modals } from "@/components/modals";
 import { Toaster } from "sonner";
 import { JotaiProvider } from "@/components/jotai-provider";
 import { LogoutProvider } from "@/context/logout-context";
+import LogoutWrapper from "./logout-wrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,7 +44,9 @@ export default function RootLayout({
                 <NuqsAdapter>
                   <Toaster />
                   <Modals />
-                  {children}
+                  <LogoutWrapper>
+                    {children}
+                  </LogoutWrapper>
                 </NuqsAdapter>
               </LogoutProvider>
             </JotaiProvider>
