@@ -3,7 +3,6 @@
 import { useLogout } from "@/context/logout-context";
 import { AuthScreen } from "@/features/auth/components/auth-screen";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
