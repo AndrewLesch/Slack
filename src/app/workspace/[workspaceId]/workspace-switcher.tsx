@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace"
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces"
@@ -10,10 +9,10 @@ import { useRouter } from "next/navigation"
 export const WorkspaceSwitcher = () => {
   const router = useRouter()
   const workspaceId = useWorkspaceId()
-  const [_open, setOpen] = useCreateWorkSpaceModal()
+  const [open, setOpen] = useCreateWorkSpaceModal()
 
   const { data : workspace, isLoading: workspaceLoading } = useGetWorkspace({id : workspaceId})
-  const { data : workspaces, isLoading: workspacesLoaing } = useGetWorkspaces()
+  const { data : workspaces } = useGetWorkspaces()
 
   const filteredWorkspaces = workspaces?.filter((workspace) => workspace?._id !== workspaceId )
 
