@@ -15,6 +15,8 @@ type Options = {
   onError?: (error: Error) => void,
   onSettled?: () => void,
   throwError?: boolean,
+
+  
 }
 
 export const useToggleReaction = () => {
