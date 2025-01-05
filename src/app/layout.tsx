@@ -32,6 +32,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
