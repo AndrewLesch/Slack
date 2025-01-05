@@ -21,8 +21,8 @@ export const WorkspaceSidebar = () => {
  
   const {data: member, isLoading: memberLoading} = useCurrentMember({workspaceId})
   const {data: workspace, isLoading: workspaceLoading} = useGetWorkspace({id: workspaceId})
-  const {data: channels, isLoading: channelsLoading} = useGetChannels({workspaceId})
-  const {data: members, isLoading: membersLoading } = useGetMembers({workspaceId})
+  const {data: channels,} = useGetChannels({workspaceId})
+  const {data: members,} = useGetMembers({workspaceId})
 
   if(workspaceLoading || memberLoading) {
     return (

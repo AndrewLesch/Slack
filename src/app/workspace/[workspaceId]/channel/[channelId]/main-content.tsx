@@ -1,7 +1,6 @@
 "use client"
 
 import { useGetChannel } from "@/features/channels/api/use-get-channel";
-import { useChannelId } from "@/hooks/use-channel-id";
 import { Loader, TriangleAlert } from "lucide-react";
 import { Header } from "./header";
 import { ChatInput } from "./chat-input";

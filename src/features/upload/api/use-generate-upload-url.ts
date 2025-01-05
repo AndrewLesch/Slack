@@ -1,7 +1,6 @@
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
 
 type ResponseType = string | null
 
@@ -25,7 +24,7 @@ export const useGenerateUploadUrl = () => {
 
   const mutation = useMutation(api.upload.generateUploadUrl)
 
-  const mutate = useCallback(async (_values: {}, options?: Options) => {
+  const mutate = useCallback(async (_values: string, options?: Options) => {
     try {
       setData(null)
       setError(null)
