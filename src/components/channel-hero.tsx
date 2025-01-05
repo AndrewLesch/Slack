@@ -9,6 +9,8 @@ export const ChannelHero = ({name, creationTime}: ChannelHeroProps) => {
 
 
 
+
+
   
   return (
     <div className="mt-[88px] mx-5 mb-4">
