@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog"
 
 interface ThumbnailProps {
@@ -11,7 +12,7 @@ export const Thumbnail = ({url}: ThumbnailProps) => {
     <Dialog>
       <DialogTrigger>
         <div className="relative overflow-hidden max-w-[300px] border rounded-lg my-2 cursor-zoom-in">
-          <img
+          <Image
             src={url}
             alt="Message img"
             className="rounded-md object-cover size-full"
@@ -20,7 +21,7 @@ export const Thumbnail = ({url}: ThumbnailProps) => {
       </DialogTrigger>
       <DialogContent className="flex items-center max-w-[550px] border-none bg-transparent p-0 shadow-none">
         <DialogTitle />
-        <img
+        <Image
             src={url}
             alt="Message img"
             className="rounded-md object-cover size-full"
