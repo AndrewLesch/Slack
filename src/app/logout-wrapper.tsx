@@ -20,9 +20,6 @@ const LogoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         .catch((error) => {
           console.error("Error during sign out:", error);
         })
-        .finally(() => {
-          setIsLoggingOut(false);
-        });
     }
   }, [isLoggingOut, signOut, router, setIsLoggingOut]); 
 
