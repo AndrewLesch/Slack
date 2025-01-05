@@ -21,6 +21,8 @@ export const useToggleReaction = () => {
   const [data, setData] = useState<ResponseType>(null);
   const [error, setError] = useState<Error | null>(null)
 
+  
+
   const [status, setStatus] = useState<"success" | "error" | "settled" | "pending" | null>(null)
 
   const isPending = useMemo(() => status === "pending", [status])
