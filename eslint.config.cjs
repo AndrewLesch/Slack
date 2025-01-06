@@ -4,7 +4,7 @@ const tsParser = require("@typescript-eslint/parser");
 
 module.exports = [
   {
-    ignores: ["node_modules", ".next", "dist"], // Игнорируемые папки
+    ignores: ["node_modules", ".next", "dist"],
   },
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
@@ -16,22 +16,22 @@ module.exports = [
           jsx: true,
         },
       },
-      parser: tsParser, // Поддержка TypeScript
+      parser: tsParser,
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
       prettier: prettier,
     },
     rules: {
-      "prettier/prettier": "error", // Интеграция Prettier
-      "@typescript-eslint/no-unused-vars": "warn", // Пример правила
+      "prettier/prettier": "error",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
   },
 ];
 
 module.exports = [
   {
-    ignores: ["node_modules", ".next", "dist"], // Игнорируемые папки
+    ignores: ["node_modules", ".next", "dist"],
   },
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
@@ -43,15 +43,15 @@ module.exports = [
           jsx: true,
         },
       },
-      parser: tsParser, // Поддержка TypeScript
+      parser: tsParser,
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
       prettier: prettier,
     },
     rules: {
-      "prettier/prettier": "error", // Интеграция Prettier
-      "@typescript-eslint/no-unused-vars": "warn", // Пример правила
+      "prettier/prettier": "error",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
   },
 ];

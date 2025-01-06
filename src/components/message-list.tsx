@@ -79,40 +79,44 @@ export const MessageList = ({
               {formatDateLabel(dateKey)}
             </span>
           </div>
-          {messages.map((message, index) => {
-            const prevMessage = messages[index - 1];
-            const isCompact =
-              prevMessage &&
-              prevMessage.user._id === message.user._id &&
-              differenceInMinutes(
-                new Date(message._creationTime),
-                new Date(prevMessage._creationTime),
-              ) < TIME_THRESHOLD;
-
-            return (
-              <Message
-                key={message._id}
-                id={message._id}
-                memberId={message.memberId}
-                authorImage={message.user.image}
-                authorName={message.user.name}
-                isAuthor={message.memberId === currentMember?._id}
-                reactions={message.reactions}
-                body={message.body}
-                image={message.image}
-                updatedAt={message.updatedAt}
-                createdAt={message._creationTime}
-                isEditing={editingId === message._id}
-                setEditingId={setEditingId}
-                isCompact={isCompact}
-                hideThreadButton={variant === "thread"}
-                threadCount={message.threadCount}
-                threadImage={message.threadImage}
-                threadName={message.threadName}
-                threadTimestamp={message.threadTimestamp}
-              />
-            );
-          })}
+          {messages
+            ?.filter(
+              (message): message is NonNullable<typeof message> =>
+                message !== null && message !== undefined,
+            )
+            .map((message, index) => {
+              const prevMessage = messages[index - 1];
+              const isCompact =
+                prevMessage &&
+                prevMessage.user._id === message.user._id &&
+                differenceInMinutes(
+                  new Date(message._creationTime),
+                  new Date(prevMessage._creationTime),
+                ) < TIME_THRESHOLD;
+              return (
+                <Message
+                  key={message._id}
+                  id={message._id}
+                  memberId={message.memberId}
+                  authorImage={message.user.image}
+                  authorName={message.user.name}
+                  isAuthor={message.memberId === currentMember?._id}
+                  reactions={message.reactions}
+                  body={message.body}
+                  image={message.image}
+                  updatedAt={message.updatedAt}
+                  createdAt={message._creationTime}
+                  isEditing={editingId === message._id}
+                  setEditingId={setEditingId}
+                  isCompact={isCompact}
+                  hideThreadButton={variant === "thread"}
+                  threadCount={message.threadCount}
+                  threadImage={message.threadImage}
+                  threadName={message.threadName}
+                  threadTimestamp={message.threadTimestamp}
+                />
+              );
+            })}
         </div>
       ))}
       <div
@@ -120,8 +124,9 @@ export const MessageList = ({
         ref={(el) => {
           if (el) {
             const observer = new IntersectionObserver(
-              ([entry]) => {
-                if (entry.isIntersecting && canLoadMore) {
+              (entries) => {
+                const [entry] = entries;
+                if (entry && entry.isIntersecting && canLoadMore) {
                   loadMore();
                 }
               },
@@ -129,10 +134,12 @@ export const MessageList = ({
             );
 
             observer.observe(el);
+
             return () => observer.disconnect();
           }
         }}
       />
+
       {isLoadingMore && (
         <div className="text-center my-2 relative">
           <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
