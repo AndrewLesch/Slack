@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useGetChannel } from "@/features/channels/api/use-get-channel";
 import { Loader, TriangleAlert } from "lucide-react";
@@ -9,28 +9,30 @@ import { MessageList } from "@/components/message-list";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 
 interface MainContentProps {
-  channelId: Id<"channels">,
+  channelId: Id<"channels">;
 }
 
-const MainContent = ({channelId}: MainContentProps) => {
-  const {results, status, loadMore} = useGetMessages({channelId})
-  const {data: channel, isLoading: channelLoading} = useGetChannel({id: channelId})
+const MainContent = ({ channelId }: MainContentProps) => {
+  const { results, status, loadMore } = useGetMessages({ channelId });
+  const { data: channel, isLoading: channelLoading } = useGetChannel({
+    id: channelId,
+  });
 
-  if(channelLoading || status === "LoadingFirstPage") {
-    return(
+  if (channelLoading || status === "LoadingFirstPage") {
+    return (
       <div className="h-full flex-1 flex items-center justify-center">
         <Loader className="animate-spin size-5 text-muted-foreground" />
       </div>
-    )
+    );
   }
 
-  if(!channel) {
-    return(
+  if (!channel) {
+    return (
       <div className="h-full flex-1 flex flex-col gap-y-2 items-center justify-center">
         <TriangleAlert className="animate-bounce size-5 text-muted-foreground" />
         <span className="text-sm text-muted-foreground">Channel not found</span>
       </div>
-    )
+    );
   }
 
   return (
@@ -47,6 +49,6 @@ const MainContent = ({channelId}: MainContentProps) => {
       <ChatInput placeholder={`Message # ${channel.name}`} />
     </div>
   );
-}
- 
+};
+
 export default MainContent;

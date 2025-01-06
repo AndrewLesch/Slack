@@ -9,27 +9,29 @@ import { MessageList } from "@/components/message-list";
 import { usePanel } from "@/hooks/use-panel";
 
 interface ConversatationProps {
-  id: Id<"conversations">
+  id: Id<"conversations">;
 }
 
-export const Conversation = ({id} : ConversatationProps) => {
-  const memberId = useMemberId()
+export const Conversation = ({ id }: ConversatationProps) => {
+  const memberId = useMemberId();
 
-  const { onOpenProfile} = usePanel()
+  const { onOpenProfile } = usePanel();
 
-  const {data: member, isLoading: memberLoading} = useGetMember({id: memberId})
+  const { data: member, isLoading: memberLoading } = useGetMember({
+    id: memberId,
+  });
   const { results, status, loadMore } = useGetMessages({
     conversationId: id,
-  })
+  });
 
-  console.log(member)
+  console.log(member);
 
-  if(memberLoading || status === "LoadingFirstPage") {
-    return(
+  if (memberLoading || status === "LoadingFirstPage") {
+    return (
       <div className="h-full flex-1 flex items-center justify-center">
         <Loader className="animate-spin size-5 text-muted-foreground" />
       </div>
-    )
+    );
   }
   return (
     <div className="flex flex-col h-full">
@@ -38,7 +40,7 @@ export const Conversation = ({id} : ConversatationProps) => {
         memberImage={member?.user.image}
         onClick={() => onOpenProfile(memberId)}
       />
-      <MessageList 
+      <MessageList
         data={results}
         variant="conversation"
         memberImage={member?.user.image}
@@ -47,10 +49,7 @@ export const Conversation = ({id} : ConversatationProps) => {
         isLoadingMore={status === "LoadingMore"}
         canLoadMore={status === "CanLoadMore"}
       />
-      <ChatInput 
-        placeholder={`Message to ${member?.user.name}`}
-        conversationId={id}
-      />
+      <ChatInput placeholder={`Message to ${member?.user.name}`} conversationId={id} />
     </div>
-  )
-}
+  );
+};

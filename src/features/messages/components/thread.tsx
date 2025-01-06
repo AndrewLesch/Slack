@@ -18,51 +18,53 @@ import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 
 // вынести одинаковый код с компонентом chat-input.tsx в отдельных кастомный хук
 
-const Editor = dynamic(() => import("@/components/editor"), {ssr: false})
+const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
-const TIME_THRESHOLD = 5
+const TIME_THRESHOLD = 5;
 
 interface ThreadProps {
-  messageId: Id<"messages">,
-  onClose: () => void,
+  messageId: Id<"messages">;
+  onClose: () => void;
 }
 
 type CreateMessageValues = {
-  channelId: Id<"channels">,
-  workspaceId: Id<"workspaces">,
-  parentMessageId: Id<"messages">,
-  body: string,
-  image?: Id<"_storage" > | undefined 
-}
+  channelId: Id<"channels">;
+  workspaceId: Id<"workspaces">;
+  parentMessageId: Id<"messages">;
+  body: string;
+  image?: Id<"_storage"> | undefined;
+};
 
-export const Thread = ({messageId, onClose}: ThreadProps) => {
-  const channelId = useChannelId()
-  const workspaceId = useWorkspaceId()
+export const Thread = ({ messageId, onClose }: ThreadProps) => {
+  const channelId = useChannelId();
+  const workspaceId = useWorkspaceId();
 
-  const [editingId, setEditingId] = useState<Id<"messages"> | null>(null)
-  const [editorKey, setEditorKey] = useState(0)
-  const [isPending, setIsPending] = useState(false)
+  const [editingId, setEditingId] = useState<Id<"messages"> | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
+  const [isPending, setIsPending] = useState(false);
 
-  const editorRef = useRef<Quill | null>(null)
+  const editorRef = useRef<Quill | null>(null);
 
-  const {mutate: generateUploadUrl} = useGenerateUploadUrl()
-  const {mutate: createMessage} = useCreateMessage()
+  const { mutate: generateUploadUrl } = useGenerateUploadUrl();
+  const { mutate: createMessage } = useCreateMessage();
 
-  const { data: currentMember } = useCurrentMember({workspaceId})
-  const {data: message, isLoading: loadingMessage} = useGetMessage({id: messageId})
+  const { data: currentMember } = useCurrentMember({ workspaceId });
+  const { data: message, isLoading: loadingMessage } = useGetMessage({
+    id: messageId,
+  });
 
   const { results, status, loadMore } = useGetMessages({
     channelId,
-    parentMessageId: messageId
-  })
+    parentMessageId: messageId,
+  });
 
-  const canLoadMore = status === "CanLoadMore"
-  const isLoadingMore = status === "LoadingMore"
+  const canLoadMore = status === "CanLoadMore";
+  const isLoadingMore = status === "LoadingMore";
 
-  const handleSubmit = async ({body, image} : {body: string, image: File | null}) => {
+  const handleSubmit = async ({ body, image }: { body: string; image: File | null }) => {
     try {
-      setIsPending(true)
-      editorRef.current?.enable(false)
+      setIsPending(true);
+      editorRef.current?.enable(false);
 
       const values: CreateMessageValues = {
         channelId,
@@ -70,70 +72,69 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
         parentMessageId: messageId,
         body,
         image: undefined,
-      }
+      };
 
-      if(image) {
-        const url = await generateUploadUrl({}, {throwError: true})
+      if (image) {
+        const url = await generateUploadUrl({}, { throwError: true });
 
-        if(!url) {
-          throw new Error("Url not found")
+        if (!url) {
+          throw new Error("Url not found");
         }
 
         const result = await fetch(url, {
           method: "POST",
-          headers: {"Content-Type": image.type},
+          headers: { "Content-Type": image.type },
           body: image,
-        })
+        });
 
-        if(!result) {
-          throw new Error("Failed to upload image")
+        if (!result) {
+          throw new Error("Failed to upload image");
         }
 
-        const { storageId } = await result.json()
+        const { storageId } = await result.json();
 
-        values.image = storageId
+        values.image = storageId;
       }
 
-      await createMessage(values, {throwError: true})
-  
-      setEditorKey((prevKey) => prevKey + 1)
-    } catch(error) {
-      toast.error("Failed to send message")
+      await createMessage(values, { throwError: true });
+
+      setEditorKey((prevKey) => prevKey + 1);
+    } catch (error) {
+      toast.error("Failed to send message");
     } finally {
-      setIsPending(false)
-      editorRef.current?.enable(true)
+      setIsPending(false);
+      editorRef.current?.enable(true);
     }
-  }
+  };
 
   const groupedMessages = results?.reduce(
     (groups, message) => {
-      const date = new Date(message._creationTime)
-      const dataKey = format(date, "yyyy-MM-ddd")
+      const date = new Date(message._creationTime);
+      const dataKey = format(date, "yyyy-MM-ddd");
 
-      if(!groups[dataKey]) {
-        groups[dataKey] = []
+      if (!groups[dataKey]) {
+        groups[dataKey] = [];
       }
 
       groups[dataKey].unshift(message);
-      return groups
+      return groups;
     },
-    {} as Record<string, typeof results>
-  )
+    {} as Record<string, typeof results>,
+  );
 
   const formatDateLabel = (dateString: string) => {
-    const date = new Date(dateString)
-  
-    if(isToday(date)) {
-      return  "Today"
-    } else if ((isYesterday(date))) {
-      return "Yesterday"
+    const date = new Date(dateString);
+
+    if (isToday(date)) {
+      return "Today";
+    } else if (isYesterday(date)) {
+      return "Yesterday";
     } else {
-      return format(date, "EEEE, MMMM d")
+      return format(date, "EEEE, MMMM d");
     }
-  }
+  };
 
-
-  if(loadingMessage || status === "LoadingFirstPage") {
+  if (loadingMessage || status === "LoadingFirstPage") {
     return (
       <div className="h-full flex flex-col">
         <div className="flex justify-between items-center h-[49px] px-4 border-b">
@@ -145,11 +146,11 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
         <div className="flex flex-col gap-y-2 h-full items-center justify-center">
           <Loader className="size-5 animate-spin text-muted-foreground" />
         </div>
-    </div>
-    )
+      </div>
+    );
   }
 
-  if(!message) {
+  if (!message) {
     return (
       <div className="h-full flex flex-col">
         <div className="flex justify-between items-center h-[49px] px-4 border-b">
@@ -163,7 +164,7 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
           <p className="text-sm text-muted-foreground">Message not found</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -185,16 +186,16 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
             </div>
             {messages.map((message, index) => {
               const prevMessage = messages[index - 1];
-              const isCompact = 
-                prevMessage && 
+              const isCompact =
+                prevMessage &&
                 prevMessage.user._id === message.user._id &&
                 differenceInMinutes(
                   new Date(message._creationTime),
-                  new Date(prevMessage._creationTime) 
-                ) < TIME_THRESHOLD
+                  new Date(prevMessage._creationTime),
+                ) < TIME_THRESHOLD;
 
               return (
-              <Message
+                <Message
                   key={message._id}
                   id={message._id}
                   memberId={message.memberId}
@@ -212,37 +213,37 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
                   hideThreadButton
                   threadCount={message.threadCount}
                   threadImage={message.threadImage}
-                  threadName={message.threadName}   
+                  threadName={message.threadName}
                   threadTimestamp={message.threadTimestamp}
-              />
-              )
+                />
+              );
             })}
           </div>
         ))}
-        <div 
+        <div
           className="h-1"
           ref={(el) => {
-            if(el) {
-              const observer  = new IntersectionObserver(
+            if (el) {
+              const observer = new IntersectionObserver(
                 ([entry]) => {
-                  if(entry.isIntersecting && canLoadMore) {
-                    loadMore()
+                  if (entry.isIntersecting && canLoadMore) {
+                    loadMore();
                   }
                 },
-                {threshold: 1.0}
-              )
+                { threshold: 1.0 },
+              );
 
-              observer.observe(el)
-              return () => observer.disconnect()
+              observer.observe(el);
+              return () => observer.disconnect();
             }
           }}
         />
         {isLoadingMore && (
           <div className="text-center my-2 relative">
-              <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
-              <span className="relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm">
-                <Loader className="size-4 animate-spin" />
-              </span>
+            <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
+            <span className="relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm">
+              <Loader className="size-4 animate-spin" />
+            </span>
           </div>
         )}
         <Message
@@ -264,12 +265,12 @@ export const Thread = ({messageId, onClose}: ThreadProps) => {
       <div className="px-4">
         <Editor
           key={editorKey}
-          onSubmit={handleSubmit} 
+          onSubmit={handleSubmit}
           innerRef={editorRef}
           disabled={isPending}
-          placeholder="Reply.." 
+          placeholder="Reply.."
         />
       </div>
     </div>
-  )
-}
+  );
+};

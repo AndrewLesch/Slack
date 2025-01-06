@@ -1,6 +1,10 @@
-"use client"
+"use client";
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { Sidebar } from "./sidebar";
 import { Toolbar } from "./toolbar";
 import { WorkspaceSidebar } from "./workspace-sidebar";
@@ -8,16 +12,16 @@ import { usePanel } from "@/hooks/use-panel";
 import { Loader } from "lucide-react";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Thread } from "@/features/messages/components/thread";
-import { Profile } from "@/features/members/components/profile"
+import { Profile } from "@/features/members/components/profile";
 
 interface WorkSpaceIdLayoutProps {
   children: React.ReactNode;
 }
 
-const WorkSpaceIdLayout = ({children} : WorkSpaceIdLayoutProps) => {
-  const {parentMessageId, profileMemberId, onClose} = usePanel()
- 
-  const showPanel = !!parentMessageId || !!profileMemberId
+const WorkSpaceIdLayout = ({ children }: WorkSpaceIdLayoutProps) => {
+  const { parentMessageId, profileMemberId, onClose } = usePanel();
+
+  const showPanel = !!parentMessageId || !!profileMemberId;
 
   return (
     <div className="h-full">
@@ -26,9 +30,9 @@ const WorkSpaceIdLayout = ({children} : WorkSpaceIdLayoutProps) => {
         <Sidebar />
         <ResizablePanelGroup direction="horizontal" autoSaveId="workspace">
           <ResizablePanel defaultSize={15} minSize={15} className="bg-[#5E2C5F]">
-            <WorkspaceSidebar />  
+            <WorkspaceSidebar />
           </ResizablePanel>
-          <ResizableHandle withHandle/>
+          <ResizableHandle withHandle />
           <ResizablePanel minSize={20} defaultSize={80}>
             {children}
           </ResizablePanel>
@@ -37,23 +41,22 @@ const WorkSpaceIdLayout = ({children} : WorkSpaceIdLayoutProps) => {
               <ResizableHandle withHandle />
               <ResizablePanel minSize={20} defaultSize={29}>
                 {parentMessageId ? (
-                    <div className="h-full">
-                      <Thread 
-                        messageId={parentMessageId as Id<"messages">}
-                        onClose={onClose}
-                      />
-                    </div>
-                  ) : profileMemberId ? (
-                    <Profile
-                      memberId={profileMemberId as Id<"members">}
+                  <div className="h-full">
+                    <Thread
+                      messageId={parentMessageId as Id<"messages">}
                       onClose={onClose}
                     />
-                  )  :  (
-                    <div className="flex h-full items-center justify-center">
-                      <Loader className="size-5 animate-spin text-muted-foreground" />
-                    </div>
-                  )
-                }
+                  </div>
+                ) : profileMemberId ? (
+                  <Profile
+                    memberId={profileMemberId as Id<"members">}
+                    onClose={onClose}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <Loader className="size-5 animate-spin text-muted-foreground" />
+                  </div>
+                )}
               </ResizablePanel>
             </>
           )}
@@ -61,6 +64,6 @@ const WorkSpaceIdLayout = ({children} : WorkSpaceIdLayoutProps) => {
       </div>
     </div>
   );
-}
- 
+};
+
 export default WorkSpaceIdLayout;

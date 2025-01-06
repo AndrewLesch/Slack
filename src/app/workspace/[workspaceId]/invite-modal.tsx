@@ -1,49 +1,59 @@
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useNewJoinCode } from "@/features/workspaces/api/use-new-join-code"
-import { useConfirm } from "@/hooks/use-confirm"
-import { useWorkspaceId } from "@/hooks/use-workspace-id"
-import { CopyIcon, RefreshCcw } from "lucide-react"
-import { toast } from "sonner"
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useNewJoinCode } from "@/features/workspaces/api/use-new-join-code";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { CopyIcon, RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
 
 interface InviteModalProps {
-  open: boolean,
-  name: string,
-  joinCode: string,
-  setOpen: (open: boolean) => void,
+  open: boolean;
+  name: string;
+  joinCode: string;
+  setOpen: (open: boolean) => void;
 }
 
-export const InviteModal = ({open, name, joinCode,  setOpen}: InviteModalProps) => {
-  const workspaceId = useWorkspaceId()
+export const InviteModal = ({ open, name, joinCode, setOpen }: InviteModalProps) => {
+  const workspaceId = useWorkspaceId();
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
-    "This will deactivate the current invite code and generate a new one."
-  )
+    "This will deactivate the current invite code and generate a new one.",
+  );
 
-  const {mutate, isPending} = useNewJoinCode()
+  const { mutate, isPending } = useNewJoinCode();
 
   const handleNewCode = async () => {
-    const ok = await confirm()
+    const ok = await confirm();
 
-    if (!ok) return
+    if (!ok) return;
 
-    mutate({workspaceId, }, {
-      onSucces: () => {
-        toast.success("Invite code regenerated")
-      }, 
-      onError: () => {
-        toast.error("Failed")
-      }
-    })
-  }
+    mutate(
+      { workspaceId },
+      {
+        onSucces: () => {
+          toast.success("Invite code regenerated");
+        },
+        onError: () => {
+          toast.error("Failed");
+        },
+      },
+    );
+  };
 
   const handleCopy = () => {
-    const inviteLink = `${window.location.origin}/join/${workspaceId}`
+    const inviteLink = `${window.location.origin}/join/${workspaceId}`;
 
     navigator.clipboard.writeText(inviteLink).then(() => {
-      toast.success("Invite link copied to clipboard")
-    })
-  }
+      toast.success("Invite link copied to clipboard");
+    });
+  };
 
   return (
     <>
@@ -52,14 +62,10 @@ export const InviteModal = ({open, name, joinCode,  setOpen}: InviteModalProps) 
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invite people to {name}</DialogTitle>
-            <DialogDescription>
-              Use the code below to invite people
-            </DialogDescription>
+            <DialogDescription>Use the code below to invite people</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-y-4 items-center justify-center py-10">
-            <p className="text-4xl font-bold tracking-widest uppercase">
-              {joinCode}
-            </p>
+            <p className="text-4xl font-bold tracking-widest uppercase">{joinCode}</p>
             <Button variant="ghost" size="sm" onClick={handleCopy}>
               Copy link
               <CopyIcon className="size-4 ml-2" />
@@ -71,14 +77,11 @@ export const InviteModal = ({open, name, joinCode,  setOpen}: InviteModalProps) 
               <RefreshCcw className="size-4 ml-2" />
             </Button>
             <DialogClose asChild>
-              <Button>
-                Close
-              </Button>
+              <Button>Close</Button>
             </DialogClose>
-
           </div>
         </DialogContent>
       </Dialog>
     </>
-  )
-}
+  );
+};

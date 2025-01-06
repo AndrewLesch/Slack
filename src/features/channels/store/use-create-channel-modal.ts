@@ -1,7 +1,7 @@
-import { atom, useAtom } from "jotai"
+import { atom, useAtom } from "jotai";
 
-const modalState = atom(false)
+const modalState = atom(false);
 
 export const useCreateChannelModal = () => {
-  return useAtom(modalState)
-}
+  return useAtom(modalState);
+};

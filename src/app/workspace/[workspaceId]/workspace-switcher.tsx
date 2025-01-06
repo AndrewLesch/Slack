@@ -1,20 +1,29 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace"
-import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces"
-import { useCreateWorkSpaceModal } from "@/features/workspaces/components/use-create-workspace-modal"
-import { useWorkspaceId } from "@/hooks/use-workspace-id"
-import { Loader, Plus } from "lucide-react"
-import { useRouter } from "next/navigation"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
+import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
+import { useCreateWorkSpaceModal } from "@/features/workspaces/components/use-create-workspace-modal";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { Loader, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const WorkspaceSwitcher = () => {
-  const router = useRouter()
-  const workspaceId = useWorkspaceId()
-  const [, setOpen] = useCreateWorkSpaceModal()
+  const router = useRouter();
+  const workspaceId = useWorkspaceId();
+  const [, setOpen] = useCreateWorkSpaceModal();
 
-  const { data : workspace, isLoading: workspaceLoading } = useGetWorkspace({id : workspaceId})
-  const { data : workspaces } = useGetWorkspaces()
+  const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({
+    id: workspaceId,
+  });
+  const { data: workspaces } = useGetWorkspaces();
 
-  const filteredWorkspaces = workspaces?.filter((workspace) => workspace?._id !== workspaceId )
+  const filteredWorkspaces = workspaces?.filter(
+    (workspace) => workspace?._id !== workspaceId,
+  );
 
   return (
     <DropdownMenu>
@@ -27,7 +36,9 @@ export const WorkspaceSwitcher = () => {
           {workspaceLoading ? (
             <Loader className="size-5 animate-spin shrink-0" />
           ) : (
-            <span>{workspace?.name ? workspace.name.charAt(0).toLocaleUpperCase() : "N/A"}</span>
+            <span>
+              {workspace?.name ? workspace.name.charAt(0).toLocaleUpperCase() : "N/A"}
+            </span>
           )}
         </div>
       </DropdownMenuTrigger>
@@ -37,11 +48,9 @@ export const WorkspaceSwitcher = () => {
           className="cursor-pointer flex-col items-start capitalize shrink-0 overflow-hidden"
         >
           {workspace?.name}
-          <span className="text-xs text-muted-foreground">
-            Active workspace
-          </span>
+          <span className="text-xs text-muted-foreground">Active workspace</span>
         </DropdownMenuItem>
-        {filteredWorkspaces?.map((workspace) => 
+        {filteredWorkspaces?.map((workspace) => (
           <DropdownMenuItem
             key={workspace._id}
             className="cursor-pointer capitalize"
@@ -50,15 +59,10 @@ export const WorkspaceSwitcher = () => {
             <div className="shrink-0 size-9 relative overflow-hidden bg-[#616061] text-white font-semibold text-lg rounded-md flex items-center justify-center mr-2">
               {workspace.name.charAt(0).toLocaleUpperCase()}
             </div>
-            <p className="truncate">
-              {workspace?.name}
-            </p>
+            <p className="truncate">{workspace?.name}</p>
           </DropdownMenuItem>
-        )}
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => setOpen(true)}
-        >
+        ))}
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setOpen(true)}>
           <div className="size-9 relative overflow-hidden bg-[#F2F2F2] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
             <Plus />
           </div>
@@ -66,5 +70,5 @@ export const WorkspaceSwitcher = () => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

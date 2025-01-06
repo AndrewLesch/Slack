@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
-import { Id } from "../../../../convex/_generated/dataModel"
-import { cva, VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import { useWorkspaceId } from "@/hooks/use-workspace-id"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { cva, VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const userItemVariants = cva(
   "flex items-center gap-1.5 justify-start font-normal h-7 px-4 text-sm overflow-hidden",
@@ -12,36 +12,30 @@ const userItemVariants = cva(
     variants: {
       variant: {
         default: "text-[#f9edffcc]",
-        active: "text-[#481349] bg-white/90 hover:bg-white/90"
-      }
+        active: "text-[#481349] bg-white/90 hover:bg-white/90",
+      },
     },
     defaultVariants: {
-      variant: "default"
-    }
-  }
-)
+      variant: "default",
+    },
+  },
+);
 
 interface UserItemProps {
-  id: Id<"members">,
-  label?: string,
-  image?: string,
-  variant?: VariantProps<typeof userItemVariants>["variant"], 
+  id: Id<"members">;
+  label?: string;
+  image?: string;
+  variant?: VariantProps<typeof userItemVariants>["variant"];
 }
 
-export const UserItem = ({
-  id,
-  label = "Member",
-  image,
-  variant
-}: UserItemProps) => {
-
-  const workspaceId = useWorkspaceId()
-  const avatarFallback = label.charAt(0).toLocaleUpperCase()
+export const UserItem = ({ id, label = "Member", image, variant }: UserItemProps) => {
+  const workspaceId = useWorkspaceId();
+  const avatarFallback = label.charAt(0).toLocaleUpperCase();
 
   return (
     <Button
       variant="transparent"
-      className={cn(userItemVariants({variant}))}
+      className={cn(userItemVariants({ variant }))}
       size="sm"
       asChild
     >
@@ -52,10 +46,8 @@ export const UserItem = ({
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
-        <span className="tet-sm truncate">
-          {label}
-        </span>
+        <span className="tet-sm truncate">{label}</span>
       </Link>
     </Button>
-  )
-}
+  );
+};

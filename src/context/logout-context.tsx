@@ -1,7 +1,9 @@
-"use client"
+"use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
-const LogoutContext = createContext<{ isLoggingOut: boolean; setIsLoggingOut: (value: boolean) => void } | undefined>(undefined);
+const LogoutContext = createContext<
+  { isLoggingOut: boolean; setIsLoggingOut: (value: boolean) => void } | undefined
+>(undefined);
 
 export const LogoutProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);

@@ -15,19 +15,19 @@ const LogoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     if (isLoggingOut) {
       signOut()
         .then(() => {
-          router.replace("/auth"); 
+          router.replace("/auth");
         })
         .catch((error) => {
           console.error("Error during sign out:", error);
-        })
+        });
     }
-  }, [isLoggingOut, signOut, router, setIsLoggingOut]); 
+  }, [isLoggingOut, signOut, router, setIsLoggingOut]);
 
   if (isLoggingOut) {
     return <AuthScreen />;
   }
 
-  return <>{children}</>; 
+  return <>{children}</>;
 };
 
 export default LogoutWrapper;

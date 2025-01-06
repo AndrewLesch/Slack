@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
-import { auth } from "./auth";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const createOrGet = mutation({
@@ -9,27 +8,29 @@ export const createOrGet = mutation({
     workspaceId: v.id("workspaces"),
   },
   handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx)
+    const userId = await getAuthUserId(ctx);
 
-    if(!userId) {
-      return
+    if (!userId) {
+      return;
     }
 
-    const currentMember = await ctx.db.query("members")
-      .withIndex("by_workspace_id_user_id", (q) => 
-        q.eq("workspaceId", args.workspaceId).eq("userId", userId)
+    const currentMember = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("userId", userId),
       )
-      .unique()
+      .unique();
 
-    const otherMebmer = await ctx.db.get(args.memberId)
+    const otherMebmer = await ctx.db.get(args.memberId);
 
-    if(!currentMember || !otherMebmer) {
-      return
+    if (!currentMember || !otherMebmer) {
+      return;
     }
 
-    const existingConversation = await ctx.db.query("conversations")
-      .filter((q) => q.eq(q.field("workspaceId"), args.workspaceId)) 
-      .filter((q) => 
+    const existingConversation = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("workspaceId"), args.workspaceId))
+      .filter((q) =>
         q.or(
           q.and(
             q.eq(q.field("memberOneId"), currentMember._id),
@@ -39,19 +40,20 @@ export const createOrGet = mutation({
             q.eq(q.field("memberOneId"), otherMebmer._id),
             q.eq(q.field("memberTwoId"), currentMember._id),
           ),
-        )
-      ).unique()
+        ),
+      )
+      .unique();
 
-      if (existingConversation) {
-        return existingConversation._id
-      }
+    if (existingConversation) {
+      return existingConversation._id;
+    }
 
-      const conversationId = await ctx.db.insert("conversations", {
-        workspaceId: args.workspaceId,
-        memberOneId: currentMember._id,
-        memberTwoId: otherMebmer._id,
-      })
+    const conversationId = await ctx.db.insert("conversations", {
+      workspaceId: args.workspaceId,
+      memberOneId: currentMember._id,
+      memberTwoId: otherMebmer._id,
+    });
 
-      return conversationId
-  }
-})
+    return conversationId;
+  },
+});
