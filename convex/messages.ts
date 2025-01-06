@@ -20,6 +20,11 @@ const populateThread = async (ctx: QueryCtx, messageId: Id<"messages">) => {
   }
 
   const lastMessage = messages[messages.length - 1];
+
+  if (!lastMessage) {
+    throw new Error("No messages available to process");
+  }
+
   const lastMessageMember = await populateMember(ctx, lastMessage.memberId);
 
   if (!lastMessageMember) {

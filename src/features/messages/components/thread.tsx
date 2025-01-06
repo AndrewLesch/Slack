@@ -109,17 +109,21 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
 
   const groupedMessages = results?.reduce(
     (groups, message) => {
-      const date = new Date(message._creationTime);
-      const dataKey = format(date, "yyyy-MM-ddd");
+      if (message) {
+        // Добавляем проверку на null или undefined
+        const date = new Date(message._creationTime);
+        const dataKey = format(date, "yyyy-MM-ddd");
 
-      if (!groups[dataKey]) {
-        groups[dataKey] = [];
+        // Инициализация массива для dataKey, если его еще нет
+        if (!groups[dataKey]) {
+          groups[dataKey] = [];
+        }
+
+        groups[dataKey]!.unshift(message); // Убедимся, что groups[dataKey] определено
       }
-
-      groups[dataKey].unshift(message);
       return groups;
     },
-    {} as Record<string, typeof results>,
+    {} as Record<string, (typeof results)[number][]>, // Типизируем как объект с ключом типа string, и значением — массив сообщений
   );
 
   const formatDateLabel = (dateString: string) => {
@@ -185,6 +189,8 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
               </span>
             </div>
             {messages.map((message, index) => {
+              if (!message) return null;
+
               const prevMessage = messages[index - 1];
               const isCompact =
                 prevMessage &&
@@ -193,6 +199,8 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                   new Date(message._creationTime),
                   new Date(prevMessage._creationTime),
                 ) < TIME_THRESHOLD;
+
+              const isCompactBoolean = isCompact ?? false;
 
               return (
                 <Message
@@ -209,7 +217,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                   createdAt={message._creationTime}
                   isEditing={editingId === message._id}
                   setEditingId={setEditingId}
-                  isCompact={isCompact}
+                  isCompact={isCompactBoolean}
                   hideThreadButton
                   threadCount={message.threadCount}
                   threadImage={message.threadImage}
@@ -226,7 +234,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
             if (el) {
               const observer = new IntersectionObserver(
                 ([entry]) => {
-                  if (entry.isIntersecting && canLoadMore) {
+                  if (entry && entry.isIntersecting && canLoadMore) {
                     loadMore();
                   }
                 },
@@ -238,6 +246,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
             }
           }}
         />
+
         {isLoadingMore && (
           <div className="text-center my-2 relative">
             <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />

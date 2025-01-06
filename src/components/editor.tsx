@@ -153,7 +153,10 @@ const Editor = ({
         type="file"
         accept="image/*"
         ref={imageElementRef}
-        onChange={(event) => setImage(event.target.files![0])}
+        onChange={(event) => {
+          const file = event.target.files?.[0] || null;
+          setImage(file);
+        }}
         className="hidden"
       />
       <div

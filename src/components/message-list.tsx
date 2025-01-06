@@ -59,14 +59,10 @@ export const MessageList = ({
       const date = new Date(message._creationTime);
       const dataKey = format(date, "yyyy-MM-dd");
 
-      if (!groups[dataKey]) {
-        groups[dataKey] = [];
-      }
-
-      groups[dataKey].unshift(message);
+      (groups[dataKey] ||= []).unshift(message);
       return groups;
     },
-    {} as Record<string, typeof data>,
+    {} as Record<string, (typeof data)[number][]>,
   );
 
   return (
@@ -86,13 +82,14 @@ export const MessageList = ({
             )
             .map((message, index) => {
               const prevMessage = messages[index - 1];
-              const isCompact =
+              const isCompact = !!(
                 prevMessage &&
                 prevMessage.user._id === message.user._id &&
                 differenceInMinutes(
                   new Date(message._creationTime),
                   new Date(prevMessage._creationTime),
-                ) < TIME_THRESHOLD;
+                ) < TIME_THRESHOLD
+              );
               return (
                 <Message
                   key={message._id}
